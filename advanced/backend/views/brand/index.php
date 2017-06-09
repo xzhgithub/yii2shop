@@ -15,10 +15,10 @@
             <td><img src="<?=$row->logo?>" width="80" class="img-circle"></td>
             <td><?=$row->name?></td>
             <td><?=$row->intro?></td>
-            <td><?=$row->status?></td>
+            <td><?=\backend\models\Brand::$status[$row->status]?></td>
             <td><?=$row->sort?></td>
-            <td><?=\yii\bootstrap\Html::a('删除',['brand/del','id'=>$row->id],['class'=>'btn btn-danger btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('修改',['brand/edit','id'=>$row->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td><?=\yii\bootstrap\Html::a('',['brand/del','id'=>$row->id],['class'=>'glyphicon glyphicon-trash btn btn-danger btn-xs'])?>
+                <?=\yii\bootstrap\Html::a('',['brand/edit','id'=>$row->id],['class'=>'glyphicon glyphicon-pencil btn btn-warning btn-xs'])?>
             </td>
         </tr>
     <?php endforeach;?>

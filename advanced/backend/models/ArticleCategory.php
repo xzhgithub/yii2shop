@@ -19,6 +19,8 @@ class ArticleCategory extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public static $status=[-1=>'删除',0=>'隐藏',1=>'正常'];
+
     public static function tableName()
     {
         return 'article_category';

@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 
+
 /**
  * This is the model class for table "brand".
  *
@@ -16,7 +17,7 @@ use Yii;
  */
 class Brand extends \yii\db\ActiveRecord
 {
-
+    public static $status=[-1=>'删除',0=>'隐藏',1=>'正常'];
     public $imgFile;
     /**
      * @inheritdoc
@@ -34,9 +35,10 @@ class Brand extends \yii\db\ActiveRecord
         return [
             [['name','intro','sort','status'],'required'],
             [['intro'], 'string'],
+            [['logo'], 'string'],
             [['sort', 'status'], 'integer'],
             [['name'], 'string', 'max' => 20],
-            [['imgFile'], 'file', 'extensions'=>['jpg','gif','png']],
+//            [['imgFile'], 'file', 'extensions'=>['jpg','gif','png']],
         ];
     }
 
@@ -51,7 +53,10 @@ class Brand extends \yii\db\ActiveRecord
             'intro' => '简介',
             'sort' => '排序',
             'status' => '状态',
-            'imgFile' => 'LOGO',
+            'logo' => 'LOGO',
         ];
     }
+
+
+
 }

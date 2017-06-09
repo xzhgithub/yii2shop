@@ -14,11 +14,11 @@
             <td><?=$row->id?></td>
             <td><?=$row->name?></td>
             <td><?=$row->intro?></td>
-            <td><?=$row->status==1?'正常':'异常'?></td>
+            <td><?=\backend\models\ArticleCategory::$status[$row->status]?></td>
             <td><?=$row->sort?></td>
             <td><?=$row->is_help==1?'帮助文档':'普通文档'?></td>
-            <td><?=\yii\bootstrap\Html::a('删除',['article_category/del','id'=>$row->id],['class'=>'btn btn-danger btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('修改',['article_category/edit','id'=>$row->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td><?=\yii\bootstrap\Html::a('',['article_category/del','id'=>$row->id],['class'=>'glyphicon glyphicon-trash btn btn-danger btn-xs'])?>
+                <?=\yii\bootstrap\Html::a('',['article_category/edit','id'=>$row->id],['class'=>'glyphicon glyphicon-pencil btn btn-warning btn-xs'])?>
             </td>
         </tr>
     <?php endforeach;?>
