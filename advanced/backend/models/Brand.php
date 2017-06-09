@@ -47,7 +47,7 @@ class Brand extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => '名称',
+            'name' => '品牌名称',
             'intro' => '简介',
             'sort' => '排序',
             'status' => '状态',

@@ -53,7 +53,7 @@ class Article extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => '名称',
+            'name' => '文章名称',
             'intro' => '简介',
             'article_category_id' => '文章分类id',
             'sort' => '排序',

@@ -32,14 +32,19 @@ class ArticleController extends \yii\web\Controller
 
                 //添加创建时间
                 $model->create_time=time();
+                //将文字内容保存到文章详情表
+                $article_detail=new ArticleDetail();
+                $article_detail->content=$model->intro;
+
+                //文字信息表只保存简介,截取内容的一部分保存
+                $model->intro=substr($model->intro,0,45);//截取15个字符
                 //保存
                 if($model->save()){
-                    //将文字内容保存到文章详情表
-                    $article_detail=new ArticleDetail();
+                    //文章信息保存后才能获取到文字id
                     $article_detail->article_id=$model->id;
-                    $article_detail->content=$model->intro;
+                   //将文章id和内容保存到文章详情表
                     $article_detail->save();
-
+                    //提示并跳转
                     \Yii::$app->session->setFlash('success','添加成功');
                     return $this->redirect(['article/index']);
                 }
@@ -66,6 +71,8 @@ class ArticleController extends \yii\web\Controller
     public function actionEdit($id){
         //实例化表单模型
         $model=Article::findOne(['id'=>$id]);
+        //获取文章内容
+        $article=ArticleDetail::findOne(['article_id'=>$id]);
         //获取分类数据
         $data=ArticleCategory::find()->where('status=1')->orderBy(['sort'=>'asc'])->all();
         $request=\Yii::$app->request;
@@ -75,11 +82,19 @@ class ArticleController extends \yii\web\Controller
 
             //验证
             if($model->validate()){
+                //将文字内容保存到文章详情表
+                $article_detail=ArticleDetail::findOne(['article_id'=>$model->id]);
+                $article_detail->content=$model->intro;
+                //将文章id和内容保存到文章详情表
+                $article_detail->save();
 
+                //文字信息表只保存简介,截取内容的一部分保存
+                $model->intro=substr($model->intro,0,45);//截取15个字符
                 //保存
                 if($model->save()){
-                    \Yii::$app->session->setFlash('success','修改成功');
-                    //跳转
+
+                    //提示并跳转
+                    \Yii::$app->session->setFlash('success','添加成功');
                     return $this->redirect(['article/index']);
                 }
 
@@ -90,7 +105,7 @@ class ArticleController extends \yii\web\Controller
             }
         }
 
-        return $this->render('add',['model'=>$model,'data'=>$data]);
+        return $this->render('add',['model'=>$model,'data'=>$data,'article'=>$article]);
     }
 
 

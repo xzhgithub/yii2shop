@@ -14,13 +14,13 @@
         <tr>
             <td><?=$row->id?></td>
             <td><?=$row->name?></td>
-            <td><?=\yii\bootstrap\Html::a(substr($row->intro,0,45),['article_detail/index','id'=>$row->id])?></td>
+            <td><?=\yii\bootstrap\Html::a($row->intro,['article_detail/index','id'=>$row->id])?></td>
             <td><?=$row->category->name?></td>
             <td><?=\backend\models\Article::$setStatus[$row->status]?></td>
             <td><?=$row->sort?></td>
             <td><?=date('Y-m-d H:i:s',$row->create_time)?></td>
-            <td><?=\yii\bootstrap\Html::a('删除',['article/del','id'=>$row->id],['class'=>'btn btn-danger btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('修改',['article/edit','id'=>$row->id],['class'=>'btn btn-warning btn-xs'])?>
+            <td><?=\yii\bootstrap\Html::a('',['article/del','id'=>$row->id],['class'=>'glyphicon glyphicon-trash btn btn-danger btn-xs'])?>
+                <?=\yii\bootstrap\Html::a('',['article/edit','id'=>$row->id],['class'=>'glyphicon glyphicon-pencil btn btn-warning btn-xs'])?>
             </td>
         </tr>
     <?php endforeach;?>
