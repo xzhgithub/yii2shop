@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\Brand;
 use yii\web\UploadedFile;
 use xj\uploadify\UploadAction;
+use crazyfd\qiniu\Qiniu;
 
 class BrandController extends \yii\web\Controller
 {
@@ -142,14 +143,48 @@ class BrandController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-                    $action->output['fileUrl'] = $action->getWebUrl();
-                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
-                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
-                    $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"
+//                    $action->output['fileUrl'] = $action->getWebUrl();
+                    $imgUrl=$action->getWebUrl();
+                    //将图片上次到七牛云
+                    $qiniu=\Yii::$app->qiniu;
+                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
+                    //获取图片在七牛云上的地址
+                    $url=$qiniu->getLink($imgUrl);
+                    $action->output['fileUrl'] = $url;
+
+
+                   /*
+                   *下面斜杠注释的方法也可以，没有封装
+                   $ak = 'CDoTHCw-z8LSDyj6Rek7bBTeOcaWs71_xDoN7LU0';
+                    $sk = 'BtHUrYN_lCFJ90ZZvZf1NdbFhKpoV55hDdUsermA';
+                    $domain = 'http://or9rwgf8b.bkt.clouddn.com';
+                    $bucket = 'yii2';
+                    $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
+
+                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
+                    $url = $qiniu->getLink($imgUrl);
+                    //获取图片在七牛云上的地址
+                    $action->output['fileUrl'] = $url;*/
+
+//                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
+//                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
+//                    $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"
                 },
             ],
         ];
     }
-
-
+//测试七牛云
+//    public function actionQiniu(){
+//        $ak = 'CDoTHCw-z8LSDyj6Rek7bBTeOcaWs71_xDoN7LU0';
+//        $sk = 'BtHUrYN_lCFJ90ZZvZf1NdbFhKpoV55hDdUsermA';
+//        $domain = 'http://or9rwgf8b.bkt.clouddn.com';
+//        $bucket = 'yii2';
+//        $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
+//        $filename=\Yii::getAlias('@webroot').'/test.jpg';
+//
+//        $key = 'test.jpg';
+//        $qiniu->uploadFile($filename,$key);
+//        $url = $qiniu->getLink($key);
+////        var_dump($url);
+//    }
 }

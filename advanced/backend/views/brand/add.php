@@ -40,12 +40,11 @@ EOF
 ]);
 
 if($model->logo){
-   echo \yii\bootstrap\Html::img('@web'.$model->logo,['class'=>'img','height'=>'80']);
+    echo \yii\bootstrap\Html::img($model->logo,['class'=>'img','height'=>'80']);
 }else{
     echo \yii\bootstrap\Html::img('',['style'=>'display:none','class'=>'img','height'=>'80']);
 }
 
-if($model->imgFile){echo "<img src='$model->imgFile' width='80'>";}
 echo $form->field($model,'sort');
 echo $form->field($model,'status',['inline'=>true])->radioList([1=>'正常',0=>'隐藏']);
 echo \yii\bootstrap\Html::submitInput('提交',['class'=>'btn btn-primary']);

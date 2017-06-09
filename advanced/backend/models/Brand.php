@@ -18,7 +18,6 @@ use Yii;
 class Brand extends \yii\db\ActiveRecord
 {
     public static $status=[-1=>'删除',0=>'隐藏',1=>'正常'];
-    public $imgFile;
     /**
      * @inheritdoc
      */
