@@ -3,14 +3,22 @@
 namespace backend\controllers;
 
 use backend\models\ArticleCategory;
+use yii\data\Pagination;
 
 class Article_categoryController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $model=ArticleCategory::find()->where('status=1')->orderBy(['sort'=>'asc'])->all();
+        $query=ArticleCategory::find();
+        //获取数据总条数
+        $count=$query->count();
+        $page=new Pagination([
+            'defaultPageSize'=>4,
+            'totalCount'=>$count,
+        ]);
+        $model=$query->where('status=1')->orderBy(['sort'=>'asc'])->offset($page->offset)->limit($page->limit)->all();
 
-        return $this->render('index',['model'=>$model]);
+        return $this->render('index',['model'=>$model,'page'=>$page]);
     }
 
     //添加

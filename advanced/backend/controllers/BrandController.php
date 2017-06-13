@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\Brand;
+use yii\data\Pagination;
 use yii\web\UploadedFile;
 use xj\uploadify\UploadAction;
 use crazyfd\qiniu\Qiniu;
@@ -11,10 +12,18 @@ class BrandController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $model=Brand::find()->where('status=1')->orderBy(['sort'=>'asc'])->all();
+        $query=Brand::find();
+        //获取数据总条数
+        $count=$query->count();
+        $page=new Pagination([
+            'defaultPageSize'=>4,
+            'totalCount'=>$count,
+        ]);
+
+        $model=Brand::find()->where('status=1')->orderBy(['sort'=>'asc'])->offset($page->offset)->limit($page->limit)->all();
 
 
-        return $this->render('index',['model'=>$model]);
+        return $this->render('index',['model'=>$model,'page'=>$page]);
     }
 
     //添加
@@ -84,7 +93,7 @@ class BrandController extends \yii\web\Controller
                 //判断是否修改了图片
                 if(!$model->logo){
 
-                    //给数据库里面的图片地址赋值
+                    //没有修改图片，给数据库里面的图片地址赋上原来的地址
                     $model->logo=$img;
                 }
 
@@ -144,17 +153,19 @@ class BrandController extends \yii\web\Controller
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
 //                    $action->output['fileUrl'] = $action->getWebUrl();
-                    $imgUrl=$action->getWebUrl();
-                    //将图片上次到七牛云
+
+                    $imgUrl=$action->getWebUrl();//获取点击上传图片时图片保存到的相对路径
+                    //将图片上传到七牛云
                     $qiniu=\Yii::$app->qiniu;
                     $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
                     //获取图片在七牛云上的地址
                     $url=$qiniu->getLink($imgUrl);
+                    //将回显图片地址设置成七牛云上的地址
                     $action->output['fileUrl'] = $url;
 
 
                    /*
-                   *下面斜杠注释的方法也可以，没有封装
+                   *下面/* 注释的方法也可以，没有封装
                    $ak = 'CDoTHCw-z8LSDyj6Rek7bBTeOcaWs71_xDoN7LU0';
                     $sk = 'BtHUrYN_lCFJ90ZZvZf1NdbFhKpoV55hDdUsermA';
                     $domain = 'http://or9rwgf8b.bkt.clouddn.com';

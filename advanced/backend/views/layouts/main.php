@@ -34,8 +34,15 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
+
     $menuItems = [
-        ['label' => '首页', 'url' => ['/site/index']],
+        ['label' => '商品分类', 'url' => ['/brand/index']],
+        ['label' => '文章分类', 'url' => ['/article_category/index']],
+        ['label' => '文章列表', 'url' => ['/article/index']],
+        ['label' => '商品列表', 'url' => ['/goods/index']],
+//        ['label' => '首页', 'url' => ['/site/index']],
+
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登陆', 'url' => ['/site/login']];

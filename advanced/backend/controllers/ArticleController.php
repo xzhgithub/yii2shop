@@ -5,14 +5,24 @@ namespace backend\controllers;
 use backend\models\Article;
 use backend\models\ArticleCategory;
 use backend\models\ArticleDetail;
+use yii\data\Pagination;
 
 class ArticleController extends \yii\web\Controller
 {
+
     public function actionIndex()
     {
-        $model=Article::find()->where('status=1')->orderBy(['sort'=>'asc'])->all();
+        $query=Article::find();
+        //获取数据总条数
+        $count=$query->count();
+        $page=new Pagination([
+            'defaultPageSize'=>4,
+            'totalCount'=>$count,
+        ]);
 
-        return $this->render('index',['model'=>$model]);
+        $model=$query->where('status=1')->orderBy(['sort'=>'asc'])->offset($page->offset)->limit($page->limit)->all();
+
+        return $this->render('index',['model'=>$model,'page'=>$page]);
     }
 
 
@@ -106,6 +116,21 @@ class ArticleController extends \yii\web\Controller
         }
 
         return $this->render('add',['model'=>$model,'data'=>$data,'article'=>$article]);
+    }
+
+    //添加ueditor插件
+    public function actions()
+    {
+        return [
+
+            'ueditor' => [
+                'class' => 'crazyfd\ueditor\Upload',
+                'config'=>[
+                    'uploadDir'=>date('Y/m/d')
+                ]
+
+            ],
+        ];
     }
 
 
