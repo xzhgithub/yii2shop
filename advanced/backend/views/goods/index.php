@@ -28,7 +28,7 @@ echo \yii\bootstrap\Html::submitInput('搜索',['class'=>'btn btn-primary']);
     <?php foreach($models as $model):?>
     <tr>
         <td><?=$model->id?></td>
-        <td><img src="<?=Yii::getAlias('@web').$model->logo?>" height="50"></td>
+        <td><img src="<?=$model->logo?>" height="50"></td>
         <td><?=$model->name?></td>
         <td><?=$model->sn?></td>
         <td><?=$model->category->name?></td>
