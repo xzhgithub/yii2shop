@@ -12,7 +12,7 @@
     <?php foreach($model as $row):?>
         <tr>
             <td><?=$row->id?></td>
-            <td><img src="<?=$row->logo?>" width="80" class="img-circle"></td>
+            <td><img src="<?=Yii::getAlias('@web').$row->logo?>" width="80" class="img-circle"></td>
             <td><?=$row->name?></td>
             <td><?=$row->intro?></td>
             <td><?=\backend\models\Brand::$status[$row->status]?></td>
