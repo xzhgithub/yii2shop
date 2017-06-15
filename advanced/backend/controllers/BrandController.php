@@ -12,7 +12,7 @@ class BrandController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $query=Brand::find();
+        $query=Brand::find()->where('status=1');
         //获取数据总条数
         $count=$query->count();
         $page=new Pagination([

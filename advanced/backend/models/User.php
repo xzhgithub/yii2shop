@@ -30,15 +30,15 @@ class User extends ActiveRecord implements IdentityInterface
 //    public $img;
 //    public $imgFile;
 
-    //定义场景常量
+//    //定义场景常量
 //    const SCENARIO_ADD = 'add';
 //    const SCENARIO_EDIT = 'edit';
-    //定义场景字段
+//    //定义场景字段
 //    public function scenarios()
 //    {
 //        $scenarios =  parent::scenarios();
-//        $scenarios[self::SCENARIO_ADD] = ['repassword','password_hash','img'];
-////        $scenarios[self::SCENARIO_EDIT] = ['name','imgFile'];
+//        $scenarios[self::SCENARIO_ADD] = ['password','password_hash','img'];
+//        $scenarios[self::SCENARIO_EDIT] = ['name','imgFile'];
 //        return $scenarios;
 //    }
 
@@ -61,6 +61,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
+            //验证两次输入的密码是否一致
+//            ['password','compare','compareAttribute'=>'password_hash','on'=>self::SCENARIO_ADD],
 //            ['password','compare', 'compareAttribute'=>'password_hash','message'=>'两次输入密码必须一致','on'=>self::SCENARIO_ADD],
 //            ['img','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>true,'message'=>'文件格式错误'],
         ];
@@ -83,7 +85,7 @@ class User extends ActiveRecord implements IdentityInterface
             'updated_at' => 'Updated At',
             'last_time' => 'Last Time',
             'last_ip' => 'Last Ip',
-            'repassword'=>'确认密码',
+            'password'=>'确认密码',
             'img'=>'头像',
         ];
     }
