@@ -18,6 +18,20 @@ class UserController extends \yii\web\Controller
         return $this->render('index',['models'=>$models]);
     }
 
+
+    //创建一个管理员
+    public function actionInit(){
+        $admin=new User();
+        $admin->auth_key=\Yii::$app->security->generateRandomString();
+        $admin->username='admin';
+        $admin->password_hash='12345678';
+        $admin->email='admin@qq.com';
+        $admin->status=1;
+        $admin->save();
+        return $this->redirect(['user/login']);
+    }
+
+
     //添加
     public function actionAdd(){
         $model=new User();
