@@ -9,8 +9,6 @@ class GoodsphotoController extends \yii\web\Controller
 {
     public function actionIndex($id)
     {
-//        $goods_id=$id;
-//        var_dump($id);exit;
         $models=GoodsPhoto::find()->where(['and','status=1',['goods_id'=>$id]])->all();
 
         return $this->render('index',['models'=>$models,'goods_id'=>$id]);
@@ -34,16 +32,17 @@ class GoodsphotoController extends \yii\web\Controller
         return $this->render('add',['photo'=>$photo]);
     }
 
-    //删除
-    public function actionDel($id){
-        //获取该数据
-        $goodsphoto=GoodsPhoto::findOne(['id'=>$id]);
-        //逻辑删除
-        $goodsphoto->status=0;
-        $goodsphoto->save();
-        //提示、跳转
-        \Yii::$app->session->setFlash('success','删除成功');
-        return $this->redirect(['goodsphoto/index','id'=>$goodsphoto->goods_id]);
+    //AJAX删除图片
+    public function actionDel(){
+
+            $id = \Yii::$app->request->post('id');
+            $model = GoodsPhoto::findOne(['id'=>$id]);
+            if($model && $model->delete()){
+                return 'success';
+            }else{
+                return 'fail';
+            }
+
     }
 
     //修改
@@ -77,22 +76,31 @@ class GoodsphotoController extends \yii\web\Controller
 //添加uploadedfiy插件
     public function actions() {
         return [
+            'upload' => [
+                'class' => 'kucha\ueditor\UEditorAction',
+                'config' => [
+                    "imageUrlPrefix"  => "",//图片访问路径前缀
+                    "imagePathFormat" => "/upload/{yyyy}{mm}{dd}/{time}{rand:6}" ,//上传保存路径
+                    "imageRoot" => \Yii::getAlias("@webroot"),
+                ],
+            ],
+
             's-upload' => [
                 'class' => UploadAction::className(),
-                'basePath' => '@webroot/upload',
-                'baseUrl' => '@web/upload',
+                'basePath' => '@webroot/upload/logo',
+                'baseUrl' => '@web/upload/logo',
                 'enableCsrf' => true, // default
                 'postFieldName' => 'Filedata', // default
                 //BEGIN METHOD
-                'format' => [$this, 'methodName'],
+                //'format' => [$this, 'methodName'],
                 //END METHOD
                 //BEGIN CLOSURE BY-HASH
                 'overwriteIfExist' => true,
-//                'format' => function (UploadAction $action) {
-//                    $fileext = $action->uploadfile->getExtension();
-//                    $filename = sha1_file($action->uploadfile->tempName);
-//                    return "{$filename}.{$fileext}";
-//                },
+                /*'format' => function (UploadAction $action) {
+                    $fileext = $action->uploadfile->getExtension();
+                    $filename = sha1_file($action->uploadfile->tempName);
+                    return "{$filename}.{$fileext}";
+                },*/
                 //END CLOSURE BY-HASH
                 //BEGIN CLOSURE BY TIME
                 'format' => function (UploadAction $action) {
@@ -100,11 +108,11 @@ class GoodsphotoController extends \yii\web\Controller
                     $filehash = sha1(uniqid() . time());
                     $p1 = substr($filehash, 0, 2);
                     $p2 = substr($filehash, 2, 2);
-                    return "{$p1}/{$p2}/{$filehash}.{$fileext}";
+                    return "/{$p1}/{$p2}/{$filehash}.{$fileext}";
                 },
                 //END CLOSURE BY TIME
                 'validateOptions' => [
-                    'extensions' => ['jpg', 'png'],
+                    'extensions' => ['jpg', 'png','gif'],
                     'maxSize' => 1 * 1024 * 1024, //file size
                 ],
                 'beforeValidate' => function (UploadAction $action) {
@@ -113,17 +121,27 @@ class GoodsphotoController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-//                    $action->output['fileUrl'] = $action->getWebUrl();
+                    //图片上传成功的同时，将图片和商品关联起来
+                    $model = new GoodsPhoto();
+                    $model->goods_id = \Yii::$app->request->post('goods_id');
+                    $model->img = $action->getWebUrl();
+                    $model->status=1;
+                    $model->save();
+                    $action->output['fileUrl'] = $model->img;
+                    //$action->output['goods_id'] = $model->goods_id;
 
-                    $imgUrl=$action->getWebUrl();//获取点击上传图片时图片保存到的相对路径
-                    //将图片上传到七牛云
-                    $qiniu=\Yii::$app->qiniu;
-                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
-                    //获取图片在七牛云上的地址
-                    $url=$qiniu->getLink($imgUrl);
-                    //将回显图片地址设置成七牛云上的地址
-                    $action->output['fileUrl'] = $url;
-
+//                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
+//                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
+//                    $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"
+                    //$action->output['Path'] = $action->getSavePath();
+                    /*
+                     * 将图片上传到七牛云
+                     */
+                    /* $qiniu = \Yii::$app->qiniu;//实例化七牛云组件
+                     $qiniu->uploadFile($action->getSavePath(),$action->getFilename());//将本地图片上传到七牛云
+                     $url = $qiniu->getLink($action->getFilename());//获取图片在七牛云上的url地址
+                     $action->output['fileUrl'] = $url;//将七牛云图片地址返回给前端js
+                    */
                 },
             ],
         ];

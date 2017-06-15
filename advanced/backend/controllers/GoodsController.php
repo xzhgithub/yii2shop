@@ -9,29 +9,48 @@ use backend\models\Goodsdaycount;
 use backend\models\Goodsintro;
 use backend\models\GoodssearchForm;
 use xj\uploadify\UploadAction;
+use yii\data\Pagination;
 
 class GoodsController extends \yii\web\Controller
 {
     public function actionIndex()
     {
+        //实现分页
+        $query=Goods::find();
+
+
         //实例化搜索模型
         $search=new GoodssearchForm();
         $request=\Yii::$app->request;
-        if($request->isPost){
+        if($request->isGet) {
             //接收
-            $search->load($request->post());
+            $search->load($request->get());
 
-            if($search->search){
-                $models=Goods::find()->where(['and','status=1',['like','name',$search->search]])->orderBy('sort')->all();
-            }else{
-                $models=Goods::find()->where('status=1')->orderBy('sort')->all();
+            if ($search->keywords) {
+                $query = $query->andwhere( ['like', 'name', $search->keywords]);
+            }
+            if ($search->sn) {
+                $query = $query->andwhere( ['like', 'sn', $search->sn]);
+            }
+            if ($search->minprice) {
+                $query = $query->andwhere( ['>=', 'shop_price', $search->minprice]);
+            }
+            if ($search->minprice) {
+                $query = $query->andwhere( ['<=', 'shop_price', $search->maxprice]);
             }
 
-        }else{
-            $models=Goods::find()->where('status=1')->orderBy('sort')->all();
         }
 
-        return $this->render('index',['models'=>$models,'search'=>$search]);
+            //总条数
+            $count=$query->andwhere('status=1')->count();
+            $page=new Pagination([
+                'defaultPageSize'=>2,
+                'totalCount'=>$count,
+            ]);
+            $models=$query->andWhere('status=1')->orderBy('sort')->offset($page->offset)->limit($page->limit)->all();
+
+
+        return $this->render('index',['models'=>$models,'search'=>$search,'page'=>$page]);
     }
 
 
@@ -53,15 +72,16 @@ class GoodsController extends \yii\web\Controller
         $goods=Goodsdaycount::findOne(['day'=>$day]);
         if($goods){
             //已添加过
-            $sn=$day.'000'.($goods->count+1);
+//            $sn=$day.'000'.($goods->count+1);
+            $sn = date('Ymd').sprintf("%04d",$goods->count+1);
         }else{
             //未添加过
-            $sn=$day.'0001';
             //添加一条数据
             $goods=new Goodsdaycount();
             $goods->day=$day;
             $goods->count=0;
             $goods->save();
+            $sn = date('Ymd').sprintf("%04d",$goods->count+1);
 
         }
 

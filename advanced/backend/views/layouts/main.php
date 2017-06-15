@@ -41,16 +41,18 @@ AppAsset::register($this);
         ['label' => '文章分类', 'url' => ['/article_category/index']],
         ['label' => '文章列表', 'url' => ['/article/index']],
         ['label' => '商品列表', 'url' => ['/goods/index']],
+        ['label' => '会员列表', 'url' => ['/user/index']],
+//        ['label' => '注销登陆', 'url' => ['user/logout']],
 //        ['label' => '首页', 'url' => ['/site/index']],
 
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '登陆', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => '登陆', 'url' => ['/user/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                '注销   (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()

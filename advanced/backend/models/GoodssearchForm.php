@@ -4,17 +4,26 @@ namespace backend\models;
 use yii\base\Model;
 
 class GoodssearchForm extends Model{
-    public $search;
+    public $keywords;
+    public $sn;
+    public $minprice;
+    public $maxprice;
 
     public function rules(){
         return[
-            ['search','string'],
+            ['keywords','string'],
+            ['sn','string'],
+            ['minprice','double'],
+            ['maxprice','double'],
         ];
     }
 
     public function attributeLabels(){
         return[
-            'search'=>'搜索内容',
+            'keywords'=>'',
+            'sn'=>'',
+            'minprice'=>'',
+            'maxprice'=>'',
         ];
     }
 }

@@ -1,7 +1,10 @@
 <?=\yii\bootstrap\Html::a('添加',['goods/add'],['class'=>'btn btn-primary'])?>
 <?php
-$form=\yii\bootstrap\ActiveForm::begin();
-echo $form->field($search,'search');
+$form=\yii\bootstrap\ActiveForm::begin(['method'=>'get','action'=>['goods/index'],'options'=>['class'=>'form-inline']]);
+echo $form->field($search,'keywords')->textInput(['placeholder'=>'name'])->label(false);
+echo $form->field($search,'sn')->textInput(['placeholder'=>'sn'])->label(false);
+echo $form->field($search,'minprice')->textInput(['placeholder'=>'min-price'])->label(false);
+echo $form->field($search,'maxprice')->textInput(['placeholder'=>'max-price'])->label('-');
 echo \yii\bootstrap\Html::submitInput('搜索',['class'=>'btn btn-primary']);
 \yii\bootstrap\ActiveForm::end();
 ?>
@@ -45,3 +48,11 @@ echo \yii\bootstrap\Html::submitInput('搜索',['class'=>'btn btn-primary']);
     </tr>
     <?php endforeach;?>
 </table>
+<?php
+echo \yii\widgets\LinkPager::widget([
+    'pagination'=>$page,
+    'firstPageLabel'=>true,
+    'lastPageLabel'=>true,
+    'nextPageLabel'=>'下一页',
+    'prevPageLabel'=>'上一页',
+]);

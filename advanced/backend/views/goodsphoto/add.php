@@ -41,7 +41,14 @@ if($photo->img){
     echo \yii\bootstrap\Html::img('',['style'=>'display:none','class'=>'img','height'=>'200']);
 }
 
-
-
 echo \yii\bootstrap\Html::submitInput('提交',['class'=>'btn btn-primary']);
 \yii\bootstrap\ActiveForm::end();
+?>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <td>图片</td>
+        <td>操作</td>
+    </tr>
+</table>
+
