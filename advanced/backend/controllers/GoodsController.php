@@ -35,7 +35,7 @@ class GoodsController extends \yii\web\Controller
             if ($search->minprice) {
                 $query = $query->andwhere( ['>=', 'shop_price', $search->minprice]);
             }
-            if ($search->minprice) {
+            if ($search->maxprice) {
                 $query = $query->andwhere( ['<=', 'shop_price', $search->maxprice]);
             }
 
