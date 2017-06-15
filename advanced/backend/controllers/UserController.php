@@ -23,9 +23,9 @@ class UserController extends \yii\web\Controller
     public function actionInit(){
         $admin=new User();
         $admin->auth_key=\Yii::$app->security->generateRandomString();
-        $admin->username='admin';
+        $admin->username='张三';
         $admin->password_hash=\Yii::$app->security->generatePasswordHash('123456');
-        $admin->email='admin@qq.com';
+        $admin->email='张三@qq.com';
         $admin->status=1;
         $admin->save();
         return $this->redirect(['user/login']);
