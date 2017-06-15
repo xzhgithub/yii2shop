@@ -24,7 +24,7 @@ class UserController extends \yii\web\Controller
         $admin=new User();
         $admin->auth_key=\Yii::$app->security->generateRandomString();
         $admin->username='admin';
-        $admin->password_hash='12345678';
+        $admin->password_hash=\Yii::$app->security->generatePasswordHash('123456');
         $admin->email='admin@qq.com';
         $admin->status=1;
         $admin->save();
