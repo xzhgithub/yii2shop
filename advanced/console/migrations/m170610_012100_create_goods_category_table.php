@@ -14,20 +14,14 @@ class m170610_012100_create_goods_category_table extends Migration
     {
         $this->createTable('goods_category', [
             'id' => $this->primaryKey(),
-//            tree int?? Ê÷id
-            'tree'=>$this->integer()->comment('Ê÷id'),
-//        lft int?? ×óÖµ
-            'lft'=>$this->integer()->comment('×óÖµ'),
-//        rgt int?? ÓÒÖµ
-            'rgt'=>$this->integer()->comment('ÓÒÖµ'),
-//        depth int?? ²ã¼¶
-            'depth'=>$this->integer()->comment('²ã¼¶'),
-//        name varchar?50?Ãû³Æ
-            'name'=>$this->string('50')->comment('Ãû³Æ'),
-//        parent_id int?? ÉÏ¼¶·ÖÀàid
-            'parent_id'=>$this->integer()->comment('ÉÏ¼¶·ÖÀàid'),
-//        intro text?? ¼ò½é
-            'intro'=>$this->text()->comment('¼ò½é'),
+
+            'tree'=>$this->integer()->comment('æ ‘id'),
+            'lft'=>$this->integer()->comment('å·¦å€¼Öµ'),
+            'rgt'=>$this->integer()->comment('å³å€¼Öµ'),
+            'depth'=>$this->integer()->comment('æ·±åº¦'),
+            'name'=>$this->string('50')->comment('åç§°'),
+            'parent_id'=>$this->integer()->comment('çˆ¶id'),
+            'intro'=>$this->text()->comment('è¯¦æƒ…'),
 
         ]);
     }

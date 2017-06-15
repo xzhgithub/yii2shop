@@ -14,17 +14,11 @@ class m170608_073809_create_brand_table extends Migration
     {
         $this->createTable('brand', [
             'id' => $this->primaryKey(),
-//            id primaryKey
-//            name varchar?50?Ãû³Æ
-            'name'=>$this->string(20)->comment('Ãû³Æ'),
-            //intro text ¼ò½é
-            'intro'=>$this->text()->comment('¼ò½é'),
-//            logo varchar?255? LOGOÍ¼Æ¬
+            'name'=>$this->string(20)->comment('åç§°'),
+            'intro'=>$this->text()->comment('è¯¦æƒ…'),
             'logo'=>$this->string(100)->comment('LOGO'),
-//             sort int?11? ÅÅĞò
-            'sort'=>$this->integer(10)->comment('ÅÅĞò'),
-//            status int?2? ×´Ì¬?©\1É¾³ı 0Òş²Ø 1Õı³£?
-            'status'=>$this->integer(2)->comment('×´Ì¬'),
+            'sort'=>$this->integer(10)->comment('æ’åº'),
+            'status'=>$this->integer(2)->comment('çŠ¶æ€'),
 
         ]);
     }
