@@ -37,10 +37,11 @@ AppAsset::register($this);
 
 
     $menuItems = [
-        ['label' => '商品分类', 'url' => ['/brand/index']],
+        ['label' => '品牌分类', 'url' => ['/brand/index']],
         ['label' => '文章分类', 'url' => ['/article_category/index']],
         ['label' => '文章列表', 'url' => ['/article/index']],
         ['label' => '商品列表', 'url' => ['/goods/index']],
+        ['label' => '商品分类', 'url' => ['/goodscategory/index']],
         ['label' => '会员列表', 'url' => ['/user/index']],
 //        ['label' => '注销登陆', 'url' => ['user/logout']],
 //        ['label' => '首页', 'url' => ['/site/index']],
