@@ -1,7 +1,5 @@
 <?php
-
 use yii\web\JsExpression;
-
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name');
 echo $form->field($model,'intro')->textarea();
@@ -38,13 +36,11 @@ EOF
         ),
     ]
 ]);
-
 if($model->logo){
     echo \yii\bootstrap\Html::img($model->logo,['class'=>'img','height'=>'80']);
 }else{
     echo \yii\bootstrap\Html::img('',['style'=>'display:none','class'=>'img','height'=>'80']);
 }
-
 echo $form->field($model,'sort');
 echo $form->field($model,'status',['inline'=>true])->radioList([1=>'正常',0=>'隐藏']);
 echo \yii\bootstrap\Html::submitInput('提交',['class'=>'btn btn-primary']);

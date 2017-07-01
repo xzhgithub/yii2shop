@@ -1,7 +1,7 @@
 <?php
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'username');
-
+//
 //echo $form->field($model,'img')->textInput(['id'=>'logo_id']);
 //echo \yii\bootstrap\Html::fileInput('test', NULL, ['id' => 'test']);
 //echo xj\uploadify\Uploadify::widget([
@@ -43,6 +43,7 @@ echo $form->field($model,'username');
 //}
 
 echo $form->field($model,'email');
+echo $form->field($model,'roles')->checkboxList(\backend\models\User::getRoles());
 echo $form->field($model,'status',['inline'=>true])->radioList([1=>'正常',0=>'隐藏']);
 echo \yii\bootstrap\Html::submitInput('提交',['class'=>'btn btn-primary']);
 \yii\bootstrap\ActiveForm::end();

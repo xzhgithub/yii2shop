@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\components\RbacFilter;
+use backend\models\BackendController;
 use backend\models\Brand;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
@@ -10,44 +12,116 @@ use backend\models\Goodsintro;
 use backend\models\GoodssearchForm;
 use xj\uploadify\UploadAction;
 use yii\data\Pagination;
+use yii\helpers\ArrayHelper;
+use yii\web\Controller;
+use backend\components\SphinxClient;
 
-class GoodsController extends \yii\web\Controller
+class GoodsController extends Controller
 {
+     //过滤器
+    public function behaviors(){
+        return[
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'only'=>['index','add','edit','del','intro'],
+            ]
+        ];
+    }
+
+
     public function actionIndex()
     {
         //实现分页
         $query=Goods::find();
 
-
         //实例化搜索模型
         $search=new GoodssearchForm();
-        $request=\Yii::$app->request;
-        if($request->isGet) {
-            //接收
-            $search->load($request->get());
 
-            if ($search->keywords) {
-                $query = $query->andwhere( ['like', 'name', $search->keywords]);
-            }
-            if ($search->sn) {
-                $query = $query->andwhere( ['like', 'sn', $search->sn]);
-            }
-            if ($search->minprice) {
-                $query = $query->andwhere( ['>=', 'shop_price', $search->minprice]);
-            }
-            if ($search->maxprice) {
-                $query = $query->andwhere( ['<=', 'shop_price', $search->maxprice]);
-            }
+        if($keyword = \Yii::$app->request->get('GoodssearchForm')["keywords"]){
+            $cl = new SphinxClient();
+            $cl->SetServer ( '127.0.0.1', 9312);
+            $cl->SetConnectTimeout ( 10 );
+            $cl->SetArrayResult ( true );
+            $cl->SetMatchMode ( SPH_MATCH_ALL);
+            $cl->SetLimits(0, 1000);
+            $res = $cl->Query($keyword, 'goods');//shopstore_search
+//            var_dump($res);exit;
+            if(!isset($res['matches'])){
+//                throw new NotFoundHttpException('没有找到xxx商品');
+                $query->where(['id'=>0]);
+            }else{
 
+                //获取商品id
+//                var_dump($res);exit;
+                $ids = ArrayHelper::map($res['matches'],'id','id');
+                $query->where(['in','id',$ids]);
+            }
         }
+        /*if($keyword = \Yii::$app->request->get('keyword')){
+            $query->andWhere(['like','name',$keyword]);
+        }
+        if($sn = \Yii::$app->request->get('sn')){
+            $query->andWhere(['like','sn',$sn]);
+        }*/
 
-            //总条数
-            $count=$query->andwhere('status=1')->count();
+        //接收表单提交的查询参数
+        //$model->search($query);
+
+
+        //商品名称含有"耳机"的  name like "%耳机%"
+//        $query = Goods::find()->where(['like','name','耳机']);
+        $count=$query->andwhere('status=1')->count();
             $page=new Pagination([
                 'defaultPageSize'=>2,
                 'totalCount'=>$count,
             ]);
-            $models=$query->andWhere('status=1')->orderBy('sort')->offset($page->offset)->limit($page->limit)->all();
+
+        $models=$query->andWhere('status=1')->orderBy('sort')->offset($page->offset)->limit($page->limit)->all();
+        if($keyword = \Yii::$app->request->get('GoodssearchForm')["keywords"]) {
+            $keywords = array_keys($res['words']);
+            $options = array(
+                'before_match' => '<span style="color:red;">',
+                'after_match' => '</span>',
+                'chunk_separator' => '...',
+                'limit' => 80, //如果内容超过80个字符，就使用...隐藏多余的的内容
+            );
+//关键字高亮
+//        var_dump($models);exit;
+            foreach ($models as $index => $item) {
+                $name = $cl->BuildExcerpts([$item->name], 'goods', implode(',', $keywords), $options); //使用的索引不能写*，关键字可以使用空格、逗号等符号做分隔，放心，sphinx很智能，会给你拆分的
+                $models[$index]->name = $name[0];
+//            var_dump($name);
+            }
+
+
+        }
+//        $request=\Yii::$app->request;
+//        if($request->isGet) {
+//            //接收
+//            $search->load($request->get());
+//
+//            if ($search->keywords) {
+//                $query = $query->andwhere( ['like', 'name', $search->keywords]);
+//            }
+//            if ($search->sn) {
+//                $query = $query->andwhere( ['like', 'sn', $search->sn]);
+//            }
+//            if ($search->minprice) {
+//                $query = $query->andwhere( ['>=', 'shop_price', $search->minprice]);
+//            }
+//            if ($search->maxprice) {
+//                $query = $query->andwhere( ['<=', 'shop_price', $search->maxprice]);
+//            }
+//
+//        }
+
+            //总条数
+//            $count=$query->andwhere('status=1')->count();
+//            $page=new Pagination([
+//                'defaultPageSize'=>2,
+//                'totalCount'=>$count,
+//            ]);
+//            $models=$query->andWhere('status=1')->orderBy('sort')->offset($page->offset)->limit($page->limit)->all();
 
 
         return $this->render('index',['models'=>$models,'search'=>$search,'page'=>$page]);

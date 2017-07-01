@@ -4,15 +4,14 @@ namespace backend\models;
 use yii\base\Model;
 
 class UsereditForm extends Model{
-    public $oldpassword;
     public $password;
     public $repassword;
     public function rules(){
         return[
-            [['oldpassword','password','repassword'],'required'],
+            [['password','repassword'],'required'],
             ['repassword','compare', 'compareAttribute'=>'password','message'=>'两次输入密码必须一致'],
             //验证旧密码是否正确
-            ['oldpassword','check'],
+//            ['oldpassword','check'],
         ];
     }
 

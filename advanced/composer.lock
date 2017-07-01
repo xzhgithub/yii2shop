@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "53c7f9dc1147b82ebbe4863724d8f8f6",
+    "content-hash": "9078723d55bfff6e9b1cabee3ff52cac",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -262,6 +262,49 @@
             "time": "2016-09-14T20:40:20+00:00"
         },
         {
+            "name": "chenkby/yii2-region",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chenkby/yii2-region.git",
+                "reference": "b377af6986f0372bb0707512e52a7b54f7d323c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chenkby/yii2-region/zipball/b377af6986f0372bb0707512e52a7b54f7d323c2",
+                "reference": "b377af6986f0372bb0707512e52a7b54f7d323c2",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-widget",
+            "autoload": {
+                "psr-4": {
+                    "chenkby\\region\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "ChenGuanQun",
+                    "email": "99912250@qq.com"
+                }
+            ],
+            "description": "Yii2中国省市区三级联动",
+            "keywords": [
+                "city",
+                "district",
+                "province",
+                "region",
+                "yii2"
+            ],
+            "time": "2017-02-22 07:06:12"
+        },
+        {
             "name": "crazyfd/yii2-qiniu",
             "version": "dev-master",
             "source": {
@@ -429,6 +472,40 @@
                 "html"
             ],
             "time": "2017-06-03T02:28:16+00:00"
+        },
+        {
+            "name": "flc/alidayu",
+            "version": "v2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flc1125/alidayu.git",
+                "reference": "03a2b8258c55a8530f191af55b5e18554ef7113c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flc1125/alidayu/zipball/03a2b8258c55a8530f191af55b5e18554ef7113c",
+                "reference": "03a2b8258c55a8530f191af55b5e18554ef7113c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flc\\Alidayu\\": "src/Alidayu/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "阿里大于(鱼)API-SDK；适用任何PHP项目，包括Laravel、Yii、Thinkphp等...",
+            "keywords": [
+                "alidayu",
+                "flc"
+            ],
+            "time": "2017-01-25T08:12:30+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2892,16 +2969,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.3.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
+                "reference": "f29dca382a6485c3cbe6379f0c61230167681937"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
-                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f29dca382a6485c3cbe6379f0c61230167681937",
+                "reference": "f29dca382a6485c3cbe6379f0c61230167681937",
                 "shasum": ""
             },
             "require": {
@@ -2913,7 +2990,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -2947,7 +3024,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14T01:06:16+00:00"
+            "time": "2017-06-09T14:24:12+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -3206,7 +3283,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "crazyfd/yii2-qiniu": 20,
-        "crazyfd/yii2-ueditor": 20
+        "crazyfd/yii2-ueditor": 20,
+        "chenkby/yii2-region": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

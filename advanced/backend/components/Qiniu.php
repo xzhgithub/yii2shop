@@ -1,9 +1,7 @@
 <?php
 namespace backend\components;
-
 use yii\base\Component;
 use yii\web\HttpException;
-
 /**
  * upload file to qiniu.
  *
@@ -16,13 +14,10 @@ use yii\web\HttpException;
  * @author crazyfd <crazyfd@qq.com>
  * @version 1.0
  */
-
 class Qiniu extends Component{
-
     public $up_host = 'http://up.qiniu.com';
     public $rs_host = 'http://rs.qbox.me';
     public $rsf_host = 'http://rsf.qbox.me';
-
     public $accessKey;
     public $secretKey;
     public $bucket;
@@ -35,22 +30,19 @@ class Qiniu extends Component{
 //        $this->domain = $domain;
 //        $this->bucket = $bucket;
 //    }
-
     /**
-     * Í¨¹ı±¾µØÎÄ¼şÉÏ´«
+     * é€šè¿‡æœ¬åœ°æ–‡ä»¶ä¸Šä¼ 
      * @param $filePath
      * @param null $key
      * @param string $bucket
      * @throws HttpException
      */
-
     public function uploadFile($filePath, $key = null, $bucket = '')
     {
         if(!file_exists($filePath)){
-            throw new HttpException(400, "ÉÏ´«µÄÎÄ¼ş²»´æÔÚ");
+            throw new HttpException(400, "ä¸Šä¼ çš„æ–‡ä»¶ä¸å­˜åœ¨");
         }
         $bucket = $bucket ? $bucket : $this->bucket;
-
         $uploadToken = $this->uploadToken(array('scope' => $bucket));
         $data = [];
         if (class_exists('\CURLFile')) {
@@ -77,9 +69,8 @@ class Qiniu extends Component{
             throw new HttpException($status, $result['error']);
         }
     }
-
     /**
-     * Í¨¹ıÍ¼Æ¬URLÉÏ´«
+     * é€šè¿‡å›¾ç‰‡URLä¸Šä¼ 
      * @param $url
      * @param null $key
      * @param string $bucket
@@ -93,14 +84,12 @@ class Qiniu extends Component{
         unlink($filePath);
         return $result;
     }
-
     /**
-     * »ñÈ¡×ÊÔ´ĞÅÏ¢ http://developer.qiniu.com/docs/v6/api/reference/rs/stat.html
+     * è·å–èµ„æºä¿¡æ¯ http://developer.qiniu.com/docs/v6/api/reference/rs/stat.html
      * @param $key
      * @param string $bucket
      * @return array
      */
-
     public function stat($key, $bucket = '')
     {
         $bucket = $bucket ? $bucket : $this->bucket;
@@ -108,9 +97,8 @@ class Qiniu extends Component{
         $url = "/stat/{$encodedEntryURI}";
         return $this->fileHandle($url);
     }
-
     /**
-     * ÒÆ¶¯×ÊÔ´ http://developer.qiniu.com/docs/v6/api/reference/rs/move.html
+     * ç§»åŠ¨èµ„æº http://developer.qiniu.com/docs/v6/api/reference/rs/move.html
      * @param $key
      * @param $bucket2
      * @param bool $key2
@@ -129,9 +117,8 @@ class Qiniu extends Component{
         $url = "/move/{$encodedEntryURISrc}/{$encodedEntryURIDest}";
         return $this->fileHandle($url);
     }
-
     /**
-     * ½«Ö¸¶¨×ÊÔ´¸´ÖÆÎªĞÂÃüÃû×ÊÔ´¡£http://developer.qiniu.com/docs/v6/api/reference/rs/copy.html
+     * å°†æŒ‡å®šèµ„æºå¤åˆ¶ä¸ºæ–°å‘½åèµ„æºã€‚http://developer.qiniu.com/docs/v6/api/reference/rs/copy.html
      * @param $key
      * @param $bucket2
      * @param bool $key2
@@ -150,9 +137,8 @@ class Qiniu extends Component{
         $url = "/copy/{$encodedEntryURISrc}/{$encodedEntryURIDest}";
         return $this->fileHandle($url);
     }
-
     /**
-     * É¾³ıÖ¸¶¨×ÊÔ´  http://developer.qiniu.com/docs/v6/api/reference/rs/delete.html
+     * åˆ é™¤æŒ‡å®šèµ„æº  http://developer.qiniu.com/docs/v6/api/reference/rs/delete.html
      * @param $key
      * @param string $bucket
      * @throws HttpException
@@ -164,10 +150,8 @@ class Qiniu extends Component{
         $url = "/delete/{$encodedEntryURI}";
         return $this->fileHandle($url);
     }
-
-
     /**
-     * ÅúÁ¿²Ù×÷£¨batch£© http://developer.qiniu.com/docs/v6/api/reference/rs/batch.html
+     * æ‰¹é‡æ“ä½œï¼ˆbatchï¼‰ http://developer.qiniu.com/docs/v6/api/reference/rs/batch.html
      * @param $operator   [stat|move|copy|delete]
      * @param $files
      * @throws HttpException
@@ -187,9 +171,8 @@ class Qiniu extends Component{
         }
         return $this->fileHandle('/batch', $data);
     }
-
     /**
-     * ÁĞ¾Ù×ÊÔ´  http://developer.qiniu.com/docs/v6/api/reference/rs/list.html
+     * åˆ—ä¸¾èµ„æº  http://developer.qiniu.com/docs/v6/api/reference/rs/list.html
      * @param string $limit
      * @param string $prefix
      * @param string $marker
@@ -203,28 +186,23 @@ class Qiniu extends Component{
         $url = $this->rsf_host . '/list?' . http_build_query($params);
         return $this->fileHandle($url);
     }
-
     protected function fileHandle($url, $data = array())
     {
         if (strpos($url, 'http://') !== 0){
             $url = $this->rs_host . $url;
         }
-
         if (is_array($data)){
             $accessToken = $this->accessToken($url);
         }
         else{
             $accessToken = $this->accessToken($url, $data);
         }
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Authorization: QBox ' . $accessToken,
         ));
-
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
-
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
@@ -237,7 +215,6 @@ class Qiniu extends Component{
             throw new HttpException($status ,$result['error']);
         }
     }
-
     public function uploadToken($flags)
     {
         if (!isset($flags['deadline'])) {
@@ -249,7 +226,6 @@ class Qiniu extends Component{
         $token = $this->accessKey . ':' . $encodedSign . ':' . $encodedFlags;
         return $token;
     }
-
     public function accessToken($url, $body = false)
     {
         $parsed_url = parse_url($url);
@@ -265,22 +241,19 @@ class Qiniu extends Component{
         $digest = hash_hmac('sha1', $access, $this->secretKey, true);
         return $this->accessKey . ':' . self::urlBase64Encode($digest);
     }
-
     /**
-     * ¿ÉÒÔ´«ÊäµÄbase64±àÂë
+     * å¯ä»¥ä¼ è¾“çš„base64ç¼–ç 
      * @param $str
      * @return mixed
      */
-
     public static function urlBase64Encode($str)
     {
         $find = array("+", "/");
         $replace = array("-", "_");
         return str_replace($find, $replace, base64_encode($str));
     }
-
     /**
-     * »ñÈ¡ÎÄ¼şÏÂÔØ×ÊÔ´Á´½Ó
+     * è·å–æ–‡ä»¶ä¸‹è½½èµ„æºé“¾æ¥
      * @param string $key
      * @return string
      */
@@ -290,18 +263,15 @@ class Qiniu extends Component{
         $url = rtrim($this->domain,'/')."/{$key}";
         return $url;
     }
-
-
     /**
-     * »ñÈ¡ÏìÓ¦Êı¾İ
-     * @param  string $text ÏìÓ¦Í·×Ö·û´®
-     * @return array        ÏìÓ¦Êı¾İÁĞ±í
+     * è·å–å“åº”æ•°æ®
+     * @param  string $text å“åº”å¤´å­—ç¬¦ä¸²
+     * @return array        å“åº”æ•°æ®åˆ—è¡¨
      */
     private function response($text)
     {
         return json_decode($text, true);
     }
-
 //    public function __destruct()
 //    {
 //    }

@@ -2,7 +2,7 @@
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'username');
 echo $form->field($model,'password_hash')->passwordInput();
-//echo $form->field($model,'password')->passwordInput();
+echo $form->field($model,'password')->passwordInput();
 //echo $form->field($model,'img')->fileInput();
 
 //echo $form->field($model,'img')->hiddenInput(['id'=>'logo_id']);
@@ -46,6 +46,7 @@ echo $form->field($model,'password_hash')->passwordInput();
 //}
 
 echo $form->field($model,'email');
+echo $form->field($model,'roles')->checkboxList(\backend\models\User::getRoles());
 echo $form->field($model,'status',['inline'=>true])->radioList([1=>'正常',0=>'隐藏']);
 echo \yii\bootstrap\Html::submitInput('提交',['class'=>'btn btn-primary']);
 \yii\bootstrap\ActiveForm::end();

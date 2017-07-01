@@ -5,9 +5,10 @@ namespace backend\controllers;
 use backend\models\Article;
 use backend\models\ArticleCategory;
 use backend\models\ArticleDetail;
+use backend\models\BackendController;
 use yii\data\Pagination;
 
-class ArticleController extends \yii\web\Controller
+class ArticleController extends \backend\controllers\BackendController
 {
 
     public function actionIndex()

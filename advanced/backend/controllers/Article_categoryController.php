@@ -3,9 +3,10 @@
 namespace backend\controllers;
 
 use backend\models\ArticleCategory;
+use backend\models\BackendController;
 use yii\data\Pagination;
 
-class Article_categoryController extends \yii\web\Controller
+class Article_categoryController extends \backend\controllers\BackendController
 {
     public function actionIndex()
     {

@@ -5,7 +5,7 @@ namespace backend\controllers;
 use backend\models\GoodsPhoto;
 use xj\uploadify\UploadAction;
 
-class GoodsphotoController extends \yii\web\Controller
+class GoodsphotoController extends BackendController
 {
     public function actionIndex($id)
     {

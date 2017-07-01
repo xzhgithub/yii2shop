@@ -1,4 +1,9 @@
-<?=\yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-primary'])?>
+<?php
+//判断是否有权限
+if(Yii::$app->user->can('brand/add')){
+    echo \yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-primary']);
+}
+?>
 <table class="table table-bordered table-striped table-hover">
     <tr>
         <td>ID</td>
@@ -17,8 +22,15 @@
             <td><?=$row->intro?></td>
             <td><?=\backend\models\Brand::$status[$row->status]?></td>
             <td><?=$row->sort?></td>
-            <td><?=\yii\bootstrap\Html::a('',['brand/del','id'=>$row->id],['class'=>'glyphicon glyphicon-trash btn btn-danger btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('',['brand/edit','id'=>$row->id],['class'=>'glyphicon glyphicon-pencil btn btn-warning btn-xs'])?>
+            <td>
+                <?php
+                    if(Yii::$app->user->can('brand/del')) {
+                        echo \yii\bootstrap\Html::a('', ['brand/del', 'id' => $row->id], ['class' => 'glyphicon glyphicon-trash btn btn-danger btn-xs']);
+                    }
+                    if(Yii::$app->user->can('brand/edit')) {
+                        echo \yii\bootstrap\Html::a('', ['brand/edit', 'id' => $row->id], ['class' => 'glyphicon glyphicon-pencil btn btn-warning btn-xs']);
+                    }
+                ?>
             </td>
         </tr>
     <?php endforeach;?>

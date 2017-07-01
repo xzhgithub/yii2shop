@@ -1,4 +1,10 @@
-<?=\yii\bootstrap\Html::a('添加',['goodscategory/add'],['class'=>'btn btn-primary'])?>
+<?php
+//判断是否有权限
+if(Yii::$app->user->can('goodscategory/add')){
+    echo \yii\bootstrap\Html::a('添加',['goodscategory/add'],['class'=>'btn btn-primary']);
+}
+?>
+
 <table class="table table-bordered table-striped table-hover">
  <tr>
      <td>ID</td>
@@ -13,7 +19,13 @@
         <td><?=str_repeat('- ',$row->depth).$row->name?><span class="cate glyphicon glyphicon-chevron-down" style="float: right;"></span></td>
         <td><?=$row->parent_id?$row->parent->name:'顶级分类'?></td>
         <td><?=$row->intro?></td>
-        <td><?=\yii\helpers\Html::a('修改',['goodscategory/edit','id'=>$row->id],['class'=>'btn btn-info'])?></td>
+        <td>
+            <?php
+            if(Yii::$app->user->can('goodscategory/edit')) {
+                echo \yii\helpers\Html::a('修改',['goodscategory/edit','id'=>$row->id],['class'=>'btn btn-info']);
+            }
+            ?>
+        </td>
         </tr>
     <?php endforeach;?>
 

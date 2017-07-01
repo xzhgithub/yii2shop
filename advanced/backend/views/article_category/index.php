@@ -1,4 +1,10 @@
-<?=\yii\bootstrap\Html::a('添加',['article_category/add'],['class'=>'btn btn-primary'])?>
+<?php
+//判断是否有权限
+if(Yii::$app->user->can('article_category/add')){
+    echo \yii\bootstrap\Html::a('添加',['article_category/add'],['class'=>'btn btn-primary']);
+}
+?>
+
 <table class="table table-bordered table-striped table-hover">
     <tr>
         <td>ID</td>
@@ -17,8 +23,15 @@
             <td><?=\backend\models\ArticleCategory::$status[$row->status]?></td>
             <td><?=$row->sort?></td>
             <td><?=$row->is_help==1?'帮助文档':'普通文档'?></td>
-            <td><?=\yii\bootstrap\Html::a('',['article_category/del','id'=>$row->id],['class'=>'glyphicon glyphicon-trash btn btn-danger btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('',['article_category/edit','id'=>$row->id],['class'=>'glyphicon glyphicon-pencil btn btn-warning btn-xs'])?>
+            <td>
+                <?php
+                if(Yii::$app->user->can('article_category/del')) {
+                    echo \yii\bootstrap\Html::a('', ['article_category/del', 'id' => $row->id], ['class' => 'glyphicon glyphicon-trash btn btn-danger btn-xs']);
+                }
+                if(Yii::$app->user->can('article_category/edit')) {
+                    echo \yii\bootstrap\Html::a('', ['article_category/edit', 'id' => $row->id], ['class' => 'glyphicon glyphicon-pencil btn btn-warning btn-xs']);
+                }
+                ?>
             </td>
         </tr>
     <?php endforeach;?>

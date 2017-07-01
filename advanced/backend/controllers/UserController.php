@@ -2,18 +2,31 @@
 
 namespace backend\controllers;
 
+use backend\components\RbacFilter;
 use backend\models\LoginForm;
 use backend\models\User;
 use backend\models\UsereditForm;
 use xj\uploadify\UploadAction;
 use yii\filters\AccessControl;
+use yii\web\Controller;
 use yii\web\Cookie;
 use yii\web\Request;
 
-class UserController extends \yii\web\Controller
+class UserController extends Controller
 {
+    //过滤器
+    public function behaviors(){
+        return[
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'only'=>['index','add','edit','del','update'],
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
+
         $models=User::find()->where('status=1')->all();
         return $this->render('index',['models'=>$models]);
     }
@@ -34,13 +47,13 @@ class UserController extends \yii\web\Controller
 
     //添加
     public function actionAdd(){
-        $model=new User();
+        $model=new User(['scenario'=>User::SCENARIO_ADD]);
 //        var_dump($model);exit;
         $request=\Yii::$app->request;
         if($request->isPost){
             //加载
             $model->load($request->post());
-//            var_dump($model);exit;
+//            var_dump($model->username);exit;
             //验证
             if($model->validate()) {
 
@@ -51,7 +64,14 @@ class UserController extends \yii\web\Controller
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
 
                 //保存
-                if ($model->save()) {
+                if ($model->save(false)) {
+
+                    //将用户和角色关联
+                    $authManager=\Yii::$app->authManager;
+                    foreach($model->roles as $role){
+                        $authManager->assign($authManager->getRole($role),$model->id);
+                    }
+
                     //提示、跳转
                     \Yii::$app->session->setFlash('success', '添加成功');
                     return $this->redirect(['user/index']);
@@ -59,7 +79,6 @@ class UserController extends \yii\web\Controller
                     var_dump($model->getErrors());
                     exit;
                 }
-
 
             }else{
                 var_dump($model->getErrors());
@@ -89,29 +108,35 @@ class UserController extends \yii\web\Controller
     //修改基本信息
     public function actionUpdate($id){
         $model=User::findOne(['id'=>$id]);
-        $img=$model->img;
+//        $img=$model->img;
+        //获取该用户的角色
+        $model->loadRole($id);
+//        var_dump($model->roles);exit;
 
         $request=\Yii::$app->request;
         if($request->isPost){
             //接收数据
             $model->load($request->post());
-//            var_dump($model,$img);exit;
             //验证
             if($model->validate()){
                 //判断是否修改了图片
-                if(!$model->img){
-                    //保存旧图片地址
-                    $model->img=$img;
-                }
+//                if($model->img==null){//没有修改图片，保存原来的图片
+//                    $model->img=$img;
+//                }
 
                 //保存
-                if ($model->save()) {
+                if ($model->save(false)) {
+                    //将用户和角色关联
+                    //移除所有角色
+                    $authManager=\Yii::$app->authManager;
+                    $authManager->revokeAll($model->id);
+                    //关联角色
+                    foreach($model->roles as $role){
+                        $authManager->assign($authManager->getRole($role),$model->id);
+                    }
                     //提示、跳转
                     \Yii::$app->session->setFlash('success', '信息修改成功');
                     return $this->redirect(['user/index']);
-                }else{
-                    var_dump($model->getErrors());
-                    exit;
                 }
             }else{
                 var_dump($model->getErrors());
@@ -139,9 +164,6 @@ class UserController extends \yii\web\Controller
                     //提示、跳转
                     \Yii::$app->session->setFlash('success', '密码修改成功');
                     return $this->redirect(['user/index']);
-                }else{
-                    var_dump($model->getErrors());
-                    exit;
                 }
             }else{
                 var_dump($model->getErrors());
@@ -165,18 +187,6 @@ class UserController extends \yii\web\Controller
             //验证(表单模型里面已实现验证数据)
             if ($model->validate()) {
 
-//                //判断是否勾选了记住登陆
-//                if($model->remember){
-//                    //实例化可写的cookie
-//                    $cookies = \Yii::$app->response->cookies;
-//                    // 将用户信息 放入cookie
-//                    $cookie = new Cookie([
-//                        'name'=>'username',
-//                        'value'=>$model->username,
-//                    ]);
-//                    $cookies->add($cookie);
-//                }
-
                 //保存登陆时间
                 $user = User::findOne(['username' => $model->username]);
                 $user->last_time = time();
@@ -186,7 +196,6 @@ class UserController extends \yii\web\Controller
                 if ($user->save(false)) {
                     //提示、跳转
                     \Yii::$app->session->setFlash('success', '登陆成功');
-//                    var_dump(\Yii::$app->user->identity->password_hash);exit;
                     return $this->redirect(['user/index']);
                 }else{
                     var_dump($model->getErrors());
@@ -212,24 +221,24 @@ class UserController extends \yii\web\Controller
 
 
     //过滤器
-    public function behaviors(){
-        return [
-            'acf'=>[
-                'class'=>AccessControl::className(),
-                'only'=>['add','edit','del','index'],
-                'rules'=>[
-                    [
-                        //已认证用户才可以执行增、删、改、查操作
-                        'allow'=>true,
-                        'actions'=>['add','edit','del','index'],
-                        'roles'=>['@'],
-                    ],
-                ]
-
-            ],
-
-        ];
-    }
+//    public function behaviors(){
+//        return [
+//            'acf'=>[
+//                'class'=>AccessControl::className(),
+//                'only'=>['add','edit','del','index'],
+//                'rules'=>[
+//                    [
+//                        //已认证用户才可以执行增、删、改、查操作
+//                        'allow'=>true,
+//                        'actions'=>['add','edit','del','index'],
+//                        'roles'=>['@'],
+//                    ],
+//                ]
+//
+//            ],
+//
+//        ];
+//    }
 
     public function actions(){
         return[

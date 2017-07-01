@@ -2,11 +2,12 @@
 
 namespace backend\controllers;
 
+use backend\models\BackendController;
 use backend\models\GoodsCategory;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
-class GoodscategoryController extends \yii\web\Controller
+class GoodscategoryController extends \backend\controllers\BackendController
 {
     public function actionIndex()
     {

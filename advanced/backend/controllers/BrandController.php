@@ -2,14 +2,29 @@
 
 namespace backend\controllers;
 
+use backend\components\rbacFilter;
 use backend\models\Brand;
 use yii\data\Pagination;
+use yii\web\Controller;
 use yii\web\UploadedFile;
 use xj\uploadify\UploadAction;
 use crazyfd\qiniu\Qiniu;
 
-class BrandController extends \yii\web\Controller
+class BrandController extends Controller
 {
+
+     //过滤器
+    public function behaviors(){
+        return[
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'only'=>['index','add','edit','del'],
+            ]
+        ];
+    }
+
+
+
     public function actionIndex()
     {
         $query=Brand::find()->where('status=1');
@@ -37,7 +52,6 @@ class BrandController extends \yii\web\Controller
 //            var_dump($model);exit;
             //实例化上传文件
 //            $model->imgFile=UploadedFile::getInstance($model,'imgFile');
-
             //验证
             if($model->validate()){
                 //判断是否上次了文件
@@ -48,20 +62,16 @@ class BrandController extends \yii\web\Controller
 //                    $model->imgFile->saveAs(\Yii::getAlias('@webroot').$imgpath,false);
 //                    $model->logo=$imgpath;
 //                }
-
                 //保存
                 if($model->save(false)){
                     \Yii::$app->session->setFlash('success','添加成功');
                     return $this->redirect(['brand/index']);
                 }
             }
-
         }
-
         //选择视图，分配数据
         return $this->render('add',['model'=>$model]);
     }
-
     //删除
     public function actionDel($id){
         $brand=Brand::findOne(['id'=>$id]);
@@ -153,7 +163,6 @@ class BrandController extends \yii\web\Controller
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
 //                    $action->output['fileUrl'] = $action->getWebUrl();
-
 //                    $imgUrl=$action->getWebUrl();//获取点击上传图片时图片保存到的相对路径
                     //将图片上传到七牛云
                     $qiniu=\Yii::$app->qiniu;
@@ -162,21 +171,17 @@ class BrandController extends \yii\web\Controller
                     $url=$qiniu->getLink($action->getWebUrl());
                     //将回显图片地址设置成七牛云上的地址
                     $action->output['fileUrl'] = $url;
-
-
-                   /*
-                   *下面/* 注释的方法也可以，没有封装
-                   $ak = 'CDoTHCw-z8LSDyj6Rek7bBTeOcaWs71_xDoN7LU0';
-                    $sk = 'BtHUrYN_lCFJ90ZZvZf1NdbFhKpoV55hDdUsermA';
-                    $domain = 'http://or9rwgf8b.bkt.clouddn.com';
-                    $bucket = 'yii2';
-                    $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
-
-                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
-                    $url = $qiniu->getLink($imgUrl);
-                    //获取图片在七牛云上的地址
-                    $action->output['fileUrl'] = $url;*/
-
+                    /*
+                    *下面/* 注释的方法也可以，没有封装
+                    $ak = 'CDoTHCw-z8LSDyj6Rek7bBTeOcaWs71_xDoN7LU0';
+                     $sk = 'BtHUrYN_lCFJ90ZZvZf1NdbFhKpoV55hDdUsermA';
+                     $domain = 'http://or9rwgf8b.bkt.clouddn.com';
+                     $bucket = 'yii2';
+                     $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
+                     $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
+                     $url = $qiniu->getLink($imgUrl);
+                     //获取图片在七牛云上的地址
+                     $action->output['fileUrl'] = $url;*/
 //                    $action->getFilename(); // "image/yyyymmddtimerand.jpg"
 //                    $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
 //                    $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"

@@ -16,7 +16,8 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'loginUrl'=>'user/login',
+            'identityClass' => 'frontend\models\Member',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
@@ -36,14 +37,24 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+//            'suffix'=>'.html',
             'rules' => [
             ],
         ],
-        */
+
+        //配置短信主键
+        'sms'=>[
+            'class'=>\frontend\components\Sms::className(),
+            'app_key'=>'24480045',
+            'app_secret' => '120b89779f6f116502a8330c24df264d',
+            'sign_name'=>'徐再洪网站',
+            'template_code'=>'SMS_71745036',
+        ],
+
     ],
     'params' => $params,
 ];

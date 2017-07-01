@@ -1,10 +1,8 @@
 <?php
 
+
 namespace backend\models;
-
 use Yii;
-
-
 /**
  * This is the model class for table "brand".
  *
@@ -25,7 +23,6 @@ class Brand extends \yii\db\ActiveRecord
     {
         return 'brand';
     }
-
     /**
      * @inheritdoc
      */
@@ -40,7 +37,6 @@ class Brand extends \yii\db\ActiveRecord
 //            [['imgFile'], 'file', 'extensions'=>['jpg','gif','png']],
         ];
     }
-
     /**
      * @inheritdoc
      */

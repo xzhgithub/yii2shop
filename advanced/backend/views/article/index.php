@@ -1,4 +1,11 @@
-<?=\yii\bootstrap\Html::a('添加',['article/add'],['class'=>'btn btn-primary'])?>
+<?php
+//判断是否有权限
+if(Yii::$app->user->can('article/add')){
+    echo \yii\bootstrap\Html::a('添加',['article/add'],['class'=>'btn btn-primary']);
+}
+
+
+?>
 <table class="table table-bordered table-striped table-hover">
     <tr>
         <td>ID</td>
@@ -19,8 +26,14 @@
             <td><?=\backend\models\Article::$setStatus[$row->status]?></td>
             <td><?=$row->sort?></td>
             <td><?=date('Y-m-d H:i:s',$row->create_time)?></td>
-            <td><?=\yii\bootstrap\Html::a('',['article/del','id'=>$row->id],['class'=>'glyphicon glyphicon-trash btn btn-danger btn-xs'])?>
-                <?=\yii\bootstrap\Html::a('',['article/edit','id'=>$row->id],['class'=>'glyphicon glyphicon-pencil btn btn-warning btn-xs'])?>
+            <td><?php
+                    if(Yii::$app->user->can('article/del')) {
+                        echo \yii\bootstrap\Html::a('', ['article/del', 'id' => $row->id], ['class' => 'glyphicon glyphicon-trash btn btn-danger btn-xs']);
+                    }
+                    if(Yii::$app->user->can('article/del')) {
+                        echo \yii\bootstrap\Html::a('', ['article/edit', 'id' => $row->id], ['class' => 'glyphicon glyphicon-pencil btn btn-warning btn-xs']);
+                    }
+                ?>
             </td>
         </tr>
     <?php endforeach;?>

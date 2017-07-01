@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -26,21 +27,22 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-//    public $password;
+    public $roles=[];//给用户添加角色
+    public $password;
 //    public $img;
 //    public $imgFile;
 
 //    //定义场景常量
-//    const SCENARIO_ADD = 'add';
-//    const SCENARIO_EDIT = 'edit';
+    const SCENARIO_ADD = 'add';
+    const SCENARIO_EDIT = 'edit';
 //    //定义场景字段
-//    public function scenarios()
-//    {
-//        $scenarios =  parent::scenarios();
-//        $scenarios[self::SCENARIO_ADD] = ['password','password_hash','img'];
-//        $scenarios[self::SCENARIO_EDIT] = ['name','imgFile'];
-//        return $scenarios;
-//    }
+    public function scenarios()
+    {
+        $scenarios =  parent::scenarios();
+        $scenarios[self::SCENARIO_ADD] = ['username','auth_key','roles','last_ip','password_reset_token','password','password_hash','email','status'];
+        $scenarios[self::SCENARIO_EDIT] = ['username','auth_key','roles','last_ip','password_reset_token', 'email','status'];
+        return $scenarios;
+    }
 
 
     public static function tableName()
@@ -55,15 +57,16 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username',  'password_hash', 'email','status'], 'required'],
+//            [['username',   'email','status'], 'required','on'=>self::SCENARIO_EDIT],
             [['status'], 'integer'],
+            ['roles','safe'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'last_ip'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
             //验证两次输入的密码是否一致
-//            ['password','compare','compareAttribute'=>'password_hash','on'=>self::SCENARIO_ADD],
-//            ['password','compare', 'compareAttribute'=>'password_hash','message'=>'两次输入密码必须一致','on'=>self::SCENARIO_ADD],
+            ['password','compare','compareAttribute'=>'password_hash','on'=>self::SCENARIO_ADD],
 //            ['img','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>true,'message'=>'文件格式错误'],
         ];
     }
@@ -87,8 +90,26 @@ class User extends ActiveRecord implements IdentityInterface
             'last_ip' => 'Last Ip',
             'password'=>'确认密码',
             'img'=>'头像',
+            'roles'=>'角色',
         ];
     }
+
+
+    //获取所有角色
+    public static function getRoles(){
+        $authManager=Yii::$app->authManager;
+        $roles=$authManager->getRoles();//获取所有角色
+        return ArrayHelper::map($roles,'name','description');
+    }
+
+    //将该用户的角色数据添加到model
+    public function loadRole($id){
+        $roles=Yii::$app->authManager->getRolesByUser($id);
+        foreach($roles as $role){
+            $this->roles[]=$role->name;
+        }
+    }
+
 
 
     /**
