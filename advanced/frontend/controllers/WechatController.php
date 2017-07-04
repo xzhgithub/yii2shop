@@ -228,6 +228,46 @@ class WechatController extends Controller{
         }
     }
 
+    //修改密码
+    public function actionEdit(){
+        $openid = \Yii::$app->session->get('openid');
+        if($openid == null){
+            //获取用户的基本信息（openid），需要通过微信网页授权
+            \Yii::$app->session->set('redirect',\Yii::$app->controller->action->uniqueId);
+            //echo 'wechat-user';
+            $app = new Application(\Yii::$app->params['wechat']);
+            //发起网页授权
+            $response = $app->oauth->scopes(['snsapi_base'])
+                ->redirect();
+            $response->send();
+        }
+        //var_dump($openid);
+        //通过openid获取账号
+        $member = Member::findOne(['openid'=>$openid]);
+        if($member == null){
+            //该openid没有绑定任何账户
+            //引导用户绑定账户
+            return $this->redirect(['wechat/login']);
+        }else{
+            //已绑定账户
+            $request=\Yii::$app->request;
+            if($request->isPost){
+                $old_password=$request->post('old_password');
+                $password=$request->post('password');
+                $repassword=$request->post('repassword');
+                if($password==$repassword&&\Yii::$app->security->validatePassword($password,$member->password_hash)){
+                    $member->password_hash=\Yii::$app->security->generatePasswordHash($password);
+                    $member->save();
+                }else{
+                    return $this->redirect(['wechat/login']);
+                }
+
+            }
+
+            return $this->redirect(['wechat/edit']);
+        }
+    }
+
 
 
 }

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75d71c7e-16e4-4668-927a-67924e015a4e" name="默认" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/advanced/frontend/views/wechat/login.php" afterPath="$PROJECT_DIR$/advanced/frontend/views/wechat/login.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php" afterPath="$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php" />
     </list>
     <ignored path="Yii2shop.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,14 +30,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WechatController.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="WechatController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="10.09375">
-              <caret line="76" column="50" selection-start-line="76" selection-start-column="44" selection-end-line="76" selection-end-column="50" />
+            <state vertical-scroll-proportion="0.54083484">
+              <caret line="259" column="36" selection-start-line="259" selection-start-column="36" selection-end-line="259" selection-end-column="36" />
               <folding>
                 <element signature="e#39#67#0#PHP" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/edit.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.71875">
+              <caret line="1" column="45" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -62,11 +72,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="login.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.041742288">
-              <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="4" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -90,7 +100,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/advanced/frontend/controllers/GoodscategoryController.php" />
         <option value="$PROJECT_DIR$/advanced/common/config/main-local.php" />
         <option value="$PROJECT_DIR$/advanced/frontend/views/user/register.php" />
         <option value="$PROJECT_DIR$/advanced/frontend/assets/ListAsset.php" />
@@ -138,9 +147,10 @@
         <option value="$PROJECT_DIR$/advanced/backend/controllers/UserController.php" />
         <option value="$PROJECT_DIR$/advanced/frontend/config/params.php" />
         <option value="$PROJECT_DIR$/advanced/frontend/views/wechat/order.php" />
-        <option value="$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php" />
         <option value="$PROJECT_DIR$/advanced/frontend/views/wechat/address.php" />
         <option value="$PROJECT_DIR$/advanced/frontend/views/wechat/login.php" />
+        <option value="$PROJECT_DIR$/advanced/frontend/views/wechat/edit.php" />
+        <option value="$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php" />
       </list>
     </option>
   </component>
@@ -484,13 +494,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/advanced/backend/models/PermissionForm.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/advanced/console/migrations/m170625_031902_create_order_table.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.49909255">
@@ -840,21 +843,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php">
+    <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="10.09375">
-          <caret line="76" column="50" selection-start-line="76" selection-start-column="44" selection-end-line="76" selection-end-column="50" />
-          <folding>
-            <element signature="e#39#67#0#PHP" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="4" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/login.php">
+    <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/edit.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.041742288">
-          <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
+        <state vertical-scroll-proportion="-0.71875">
+          <caret line="1" column="45" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.54083484">
+          <caret line="259" column="36" selection-start-line="259" selection-start-column="36" selection-end-line="259" selection-end-column="36" />
+          <folding>
+            <element signature="e#39#67#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
