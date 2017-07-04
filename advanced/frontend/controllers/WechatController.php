@@ -59,7 +59,7 @@ class WechatController extends Controller{
 
                     }
                     return $models;
-                }elseif($message->Content='接触绑定'){
+                }elseif($message->Content='解除绑定'){
 
                 }
             }
