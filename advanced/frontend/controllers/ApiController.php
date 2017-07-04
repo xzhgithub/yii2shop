@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use backend\models\Article;
 use backend\models\ArticleCategory;
 use frontend\models\Address;
+use frontend\models\Brand;
 use frontend\models\Cart;
 use frontend\models\Goods;
 use frontend\models\GoodsCategory;
@@ -12,8 +13,10 @@ use frontend\models\Member;
 use frontend\models\Order;
 use frontend\models\OrderGoods;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 class ApiController extends Controller{
 
@@ -38,6 +41,8 @@ class ApiController extends Controller{
             $model->repassword=$request->post('repassword');//确认密码
             $model->email=$request->post('email');//邮箱
             $model->tel=$request->post('tel');//电话
+            $model->code=$request->post('code');//图片验证码
+            $model->tel_code=$request->post('tel_code');//短信验证码
             //验证
             if($model->validate()){
                 $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password);
@@ -54,6 +59,72 @@ class ApiController extends Controller{
 
         return ['status'=>-1,'errormsge'=>'请求方式错误','data'=>''];
     }
+
+
+    //-发送手机验证码
+    public function actionSendSms()
+    {
+        //确保上一次发送短信间隔超过1分钟
+        $tel = \Yii::$app->request->post('tel');
+        if(!preg_match('/^1[34578]\d{9}$/',$tel)){
+            return ['status'=>'-1','errormsge'=>'电话号码不正确'];
+        }
+        //检查上次发送时间是否超过1分钟
+        $value = \Yii::$app->cache->get('time_tel_'.$tel);
+        $s = time()-$value;
+        if($s <60){
+            return ['status'=>'-1','errormsge'=>'请'.(60-$s).'秒后再试'];
+        }
+
+        $code = rand(1000,9999);
+        $result = \Yii::$app->sms->setNum($tel)->setParam(['code' => $code])->send();
+//        $result = 1;
+        if($result){
+            //保存当前验证码 session  mysql  redis  不能保存到cookie
+//            \Yii::$app->session->set('code',$code);
+//            \Yii::$app->session->set('tel_'.$tel,$code);
+            \Yii::$app->cache->set('tel_'.$tel,$code,5*60);
+            \Yii::$app->cache->set('time_tel_'.$tel,time(),5*60);
+            //echo 'success'.$code;
+            return ['status'=>'1','errormsge'=>''];
+        }else{
+            return ['status'=>'-1','errormsge'=>'短信发送失败'];
+        }
+    }
+
+
+
+    //获取验证码
+    //http://www.yii2shop.com/api/captcha 显示验证码
+    //http://www.yii2shop.com/api/captcha?refresh=1 获取新验证码图片地址(加参数refresh=1)
+    //http://www.yii2shop.com/api/captcha?v=59573cbe28c58 新验证码图片地址
+    public function actions()
+    {
+        return [
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'minLength'=>3,
+                'maxLength'=>3,
+            ],
+        ];
+    }
+
+    //-文件上传
+    public function actionUpload()
+    {
+        $img = UploadedFile::getInstanceByName('img');
+        if($img){
+            $fileName = '/upload/'.uniqid().'.'.$img->extension;
+            $result = $img->saveAs(\Yii::getAlias('@webroot').$fileName,0);
+            if($result){
+                return ['status'=>'1','errormsge'=>'','data'=>$fileName];
+            }
+            return ['status'=>'-1','errormsge'=>$img->error];
+        }
+        return ['status'=>'-1','errormsge'=>'没有文件上传'];
+    }
+
 
 
     //会员登陆接口
@@ -190,8 +261,32 @@ class ApiController extends Controller{
     //获取所有商品分类接口
     public function actionGetAllGoodsCategory(){
 
-            $model=GoodsCategory::find()->all();
-            return ['status'=>1,'errormsge'=>'','data'=>$model];
+
+        //每页显示条数
+        $per_page = \Yii::$app->request->get('per_page',1);//默认2条
+        //当前第几页
+        $page = \Yii::$app->request->get('page',1);
+
+        $keywords = \Yii::$app->request->get('keywords');//搜索的关键词
+
+        $page = $page < 1?1:$page;
+        $query = GoodsCategory::find();
+
+        if($keywords){
+            $query->andWhere(['like','name',$keywords]);
+        }
+
+        //总条数
+        $total = $query->count();
+        //获取当前页的商品数据
+        $goods = $query->offset($per_page*($page-1))->limit($per_page)->asArray()->all();
+        return ['status'=>'1','errormsge'=>'','data'=>[
+            'total'=>$total,
+            'per_page'=>$per_page,
+            'page'=>$page,
+            'goods'=>$goods
+        ]];
+
     }
 
     //获取某分类的所有子分类
@@ -229,10 +324,54 @@ class ApiController extends Controller{
         //接收数据
         $request=\Yii::$app->request;
         if($request->isGet){
-            $id=$request->get('goods_category_id');
-            $model=Goods::find()->where(['goods_category_id'=>$id])->all();
+            //每页显示条数
+            $per_page = \Yii::$app->request->get('per_page',10);//默认2条
+            //当前第几页
+            $page = \Yii::$app->request->get('page',1);
 
-            return ['status'=>1,'errormsge'=>'','data'=>$model];
+            $keywords = \Yii::$app->request->get('keywords');//搜索的关键词
+
+            $page = $page < 1?1:$page;
+            $query = Goods::find();
+
+
+            $cate_id = \Yii::$app->request->get('cate_id');
+            $cate = \backend\models\GoodsCategory::findOne(['id'=>$cate_id]);
+            if($cate==null){
+                return ['status'=>-1,'errormsge'=>'该分类不存在','data'=>''];
+            }
+            switch ($cate->depth){
+                case 2://三级分类
+                    $query->andWhere(['goods_category_id'=>$cate_id]);
+                    break;
+                case 1://二级分类
+                    $ids = ArrayHelper::map($cate->children,'id','id');
+                    $ids[$cate_id]=$cate_id;
+//                    var_dump($ids);exit;
+                    $query->andWhere(['in','goods_category_id',$ids]);
+                    break;
+                case 0;//一级分类
+                    $ids = ArrayHelper::map($cate->leaves()->asArray()->all(),'id','id');
+                    $ids[$cate_id]=$cate_id;
+                    $query->andWhere(['in','goods_category_id',$ids]);
+                    break;
+
+            }
+
+            if($keywords){
+                $query->andWhere(['like','name',$keywords]);
+            }
+
+            //总条数
+            $total = $query->count();
+            //获取当前页的商品数据
+            $goods = $query->offset($per_page*($page-1))->limit($per_page)->asArray()->all();
+            return ['status'=>'1','errormsge'=>'','data'=>[
+                'total'=>$total,
+                'per_page'=>$per_page,
+                'page'=>$page,
+                'goods'=>$goods
+            ]];
         }
 
         return ['status'=>-1,'errormsge'=>'请求方式错误','data'=>''];
@@ -244,10 +383,32 @@ class ApiController extends Controller{
         //接收数据
         $request=\Yii::$app->request;
         if($request->isGet){
-            $id=$request->get('brand_id');
-            $model=Goods::find()->where(['brand_id'=>$id])->all();
+            $brand_id=$request->get('brand_id');
+            //每页显示条数
+            $per_page = \Yii::$app->request->get('per_page',10);//默认2条
+            //当前第几页
+            $page = \Yii::$app->request->get('page',1);
 
-            return ['status'=>1,'errormsge'=>'','data'=>$model];
+            $keywords = \Yii::$app->request->get('keywords');//搜索的关键词
+
+            $page = $page < 1?1:$page;
+            $query = Goods::find();
+
+            if($keywords){
+                $query->andWhere(['like','name',$keywords]);
+            }
+
+            //总条数
+            $total = $query->count();
+            //获取当前页的商品数据
+            $goods = $query->andwhere(['brand_id'=>$brand_id])->offset($per_page*($page-1))->limit($per_page)->asArray()->all();
+            return ['status'=>'1','errormsge'=>'','data'=>[
+                'total'=>$total,
+                'per_page'=>$per_page,
+                'page'=>$page,
+                'goods'=>$goods
+            ]];
+
         }
 
         return ['status'=>-1,'errormsge'=>'请求方式错误','data'=>''];

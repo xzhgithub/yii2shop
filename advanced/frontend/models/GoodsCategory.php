@@ -21,6 +21,15 @@ class GoodsCategory extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
+    //获取某个分类下的子分类
+    public function getchildren(){
+        return $this->hasMany(GoodsCategory::className(),['parent_id'=>'id']);
+    }
+
+
+
+
     public static function tableName()
     {
         return 'goods_category';

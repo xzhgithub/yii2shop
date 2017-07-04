@@ -1,5 +1,6 @@
 {
     "require": {
-        "flc/alidayu": "^2.0"
+        "flc/alidayu": "^2.0",
+        "overtrue/wechat": "~3.1"
     }
 }

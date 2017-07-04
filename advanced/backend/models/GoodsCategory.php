@@ -23,6 +23,10 @@ class GoodsCategory extends \yii\db\ActiveRecord
         return $this->hasOne(GoodsCategory::className(),['id'=>'parent_id']);
     }
 
+    //获取某个分类下的子分类
+    public function getchildren(){
+        return $this->hasMany(GoodsCategory::className(),['parent_id'=>'id']);
+    }
 
     /**
      * @inheritdoc
