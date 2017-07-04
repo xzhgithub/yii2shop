@@ -16,7 +16,7 @@ return [
         'app_id'  => 'wx1cbe46492584dd87',         // AppID
         'secret'  => '785f1125e288fa812f7d14346b8fe4af',     // AppSecret
         'token'   => 'itsource',          // Token 支付不需要
-        'aes_key' => '',                    // EncodingAESKey，安全模式下请一定要填写！！！
+        'aes_key' => 'itsource',                    // EncodingAESKey，安全模式下请一定要填写！！！
         /**
          * 日志配置
          *
