@@ -30,11 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WechatController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WechatController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8330309">
-              <caret line="86" column="57" selection-start-line="86" selection-start-column="50" selection-end-line="86" selection-end-column="57" />
+            <state vertical-scroll-proportion="10.09375">
+              <caret line="76" column="50" selection-start-line="76" selection-start-column="44" selection-end-line="76" selection-end-column="50" />
               <folding>
                 <element signature="e#39#67#0#PHP" expanded="true" />
               </folding>
@@ -62,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="login.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.15625">
-              <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.041742288">
+              <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -840,21 +840,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.15625">
-          <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/advanced/frontend/controllers/WechatController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8330309">
-          <caret line="86" column="57" selection-start-line="86" selection-start-column="50" selection-end-line="86" selection-end-column="57" />
+        <state vertical-scroll-proportion="10.09375">
+          <caret line="76" column="50" selection-start-line="76" selection-start-column="44" selection-end-line="76" selection-end-column="50" />
           <folding>
             <element signature="e#39#67#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/advanced/frontend/views/wechat/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.041742288">
+          <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
+          <folding />
         </state>
       </provider>
     </entry>
