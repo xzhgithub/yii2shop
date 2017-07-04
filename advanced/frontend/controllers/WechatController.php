@@ -224,6 +224,7 @@ class WechatController extends Controller{
 
     //收货地址
     public function actionAddress(){
+        echo '11';exit;
         $openid = \Yii::$app->session->get('openid');
         if($openid == null){
             //获取用户的基本信息（openid），需要通过微信网页授权
