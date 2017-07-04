@@ -43,6 +43,27 @@ class WechatController extends Controller{
                     }
             }
 
+            if($message->MsgType=='text'){
+                if($message->Content='帮助'){
+                    return "您可以发送 优惠、解除绑定 等信息";
+                }elseif($message->Content='优惠'){
+                    $goods = Goods::find()->limit(5)->all();
+                    $models = [];
+                    foreach ($goods as $good) {
+                        $models[] = new News([
+                            'title' => $good->name,
+                            'description' => '图文信息的描述...',
+                            'url' => 'http://xzh.fan-0.cn/goods/goodsintro?goods_id='.$good->id,
+                            'image' => $good->logo,
+                        ]);
+
+                    }
+                    return $models;
+                }elseif($message->Content='接触绑定'){
+
+                }
+            }
+
         });
         $response = $app->server->serve();
 // 将响应输出
