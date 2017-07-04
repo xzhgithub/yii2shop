@@ -9,11 +9,10 @@ class WechatController extends Controller{
     public $enableCsrfValidation = false;
 
     public function actionIndex(){
-        echo 'wechat';
 
-//        $app = new Application(\Yii::$app->params['wechat']);
-//        $response = $app->server->serve();
-//// 将响应输出
-//        $response->send(); // Laravel 里请使用：return $response;
-    }
+        $app = new Application(\Yii::$app->params['wechat']);
+        $response = $app->server->serve();
+        //将响应输出
+        $response->send(); // Laravel 里请使用：return $response;
+   }
 }
