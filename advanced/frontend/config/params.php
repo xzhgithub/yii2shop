@@ -38,7 +38,7 @@ return [
          */
         'oauth' => [
             'scopes'   => ['snsapi_base'],
-            'callback' => 'http://phpweixin.itsource.cn/yii2shop/frontend/web/wechat/callback.html',
+            'callback' => 'http://xzh.fan-0.cn/wechat/callback',
         ],
         /**
          * 微信支付
